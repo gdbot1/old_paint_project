@@ -278,6 +278,10 @@ public class LayersPanel extends JPanel implements ActionListener, KeyListener, 
         } else rollButton.y = 0;
     }
 
+    public void setLocation (int x, int y) {
+        frame.setLocation(x, y);
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
 

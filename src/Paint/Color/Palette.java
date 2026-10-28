@@ -154,6 +154,10 @@ public class Palette extends JPanel implements ActionListener, MouseListener {
         //g.fillPolygon(new int[]{saturationX,saturationX+15,saturationX+7,saturationX+5},new int[]{brightnessY,brightnessY+5,brightnessY+7,brightnessY+15},4);
     }
 
+    public void setLocation (int x, int y) {
+        frame.setLocation(x, y);
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 

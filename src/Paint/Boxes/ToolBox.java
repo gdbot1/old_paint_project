@@ -123,6 +123,10 @@ public class ToolBox extends JPanel implements ActionListener, MouseListener {
     public void setToolboxAlwaysOnTop (boolean alwaysOnTop) {
         frame.setAlwaysOnTop(alwaysOnTop);
     }
+
+    public void setLocation (int x, int y) {
+        frame.setLocation(x, y);
+    }
 }
 
 class Button {

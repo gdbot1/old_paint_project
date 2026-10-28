@@ -22,7 +22,7 @@ public class Main extends JPanel implements ActionListener, KeyListener, MouseLi
         new Main();
     }
 
-    Frame frame = new Frame(0,0,1000,600,"Paint",false,false,false, true);
+    Frame frame = new Frame(0,0,1000,600,"Paint",false,false,true, true);
     Timer timer = new Timer(1000/fps,this);
 
     Hitbox panel = new Hitbox(0,0,frame.getWidth(),75);
@@ -35,21 +35,24 @@ public class Main extends JPanel implements ActionListener, KeyListener, MouseLi
     ToolBox toolBox = new ToolBox(0,144);
 
     public Main () {
+        palette.setPaletteVisible(true);
+        palette.setPaletteAlwaysOnTop(true);
+        palette.setLocation(1000 + 25, 0);
+
+        toolBox.setToolboxVisible(true);
+        toolBox.setToolboxAlwaysOnTop(true);
+        toolBox.setLocation(1000 + 25, 260 + 25);
+
+        layersPanel.getCurrentCanvas().centralizeTheCoordinateOfCamera(camera,frame);
+        layersPanel.getCurrentCanvas().centralizeTheZoomOfCamera(camera,frame,false,100);
+        layersPanel.setLayersAlwaysOnTop(true);
+        layersPanel.setLocation(1000 + 25, 260 + 25 + 102 + 25);
+
         frame.add(this);
         frame.addKeyListener(this);
         frame.addMouseListener(this);
         frame.addMouseWheelListener(this);
         frame.setVisible(true);
-
-        palette.setPaletteVisible(true);
-        palette.setPaletteAlwaysOnTop(true);
-
-        toolBox.setToolboxVisible(true);
-        toolBox.setToolboxAlwaysOnTop(true);
-
-        layersPanel.getCurrentCanvas().centralizeTheCoordinateOfCamera(camera,frame);
-        layersPanel.getCurrentCanvas().centralizeTheZoomOfCamera(camera,frame,false,100);
-        layersPanel.setLayersAlwaysOnTop(true);
 
         timer.start();
     }
@@ -152,11 +155,11 @@ public class Main extends JPanel implements ActionListener, KeyListener, MouseLi
     @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
+        if (key==KeyEvent.VK_CONTROL) CTRLAction = false;
         if (camera.moveUpKeyBing.check(key)) camera.moveUpAction = false;
         else if (camera.moveRightKeyBing.check(key)) camera.moveRightAction = false;
         else if (camera.moveDownKeyBing.check(key)) camera.moveDownAction = false;
         else if (camera.moveLeftKeyBing.check(key)) camera.moveLeftAction = false;
-        else if (key==KeyEvent.VK_CONTROL) CTRLAction = false;
         else if (key==KeyEvent.VK_ENTER) {
             layersPanel.getCurrentCanvas().selected = false;
             layersPanel.getCurrentCanvas().selectLine = new ArrayList<>();
@@ -228,7 +231,7 @@ public class Main extends JPanel implements ActionListener, KeyListener, MouseLi
                 camera.actionZoom -= (double) e.getWheelRotation() * camera.actionZoom / 10;
             }
             else {
-                brush.width += e.getWheelRotation();
+                brush.width -= e.getWheelRotation();
 
                 if (brush.width < 1) {
                     brush.width = 1;
