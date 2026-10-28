@@ -1,11 +1,14 @@
 package World;
 
 import World.Values.Bind;
+import World.Values.Binds.GrabBind;
 import World.Values.Point;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 public class Camera {
+    public GrabBind grabCameraMouseBind = new GrabBind(new int[]{MouseEvent.BUTTON3});
     public Bind moveUpKeyBing = new Bind(new int[]{KeyEvent.VK_W,KeyEvent.VK_UP}), moveRightKeyBing = new Bind(new int[]{KeyEvent.VK_D,KeyEvent.VK_RIGHT}), moveDownKeyBing = new Bind(new int[]{KeyEvent.VK_S,KeyEvent.VK_DOWN}), moveLeftKeyBing = new Bind(new int[]{KeyEvent.VK_A,KeyEvent.VK_LEFT});
     public boolean moveUpAction = false, moveRightAction = false, moveDownAction = false, moveLeftAction = false;
     public double x, y, zoom, angle, actionX, actionY, actionZoom, actionAngle, smoothEffect, moveSpeed;

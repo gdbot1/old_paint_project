@@ -62,7 +62,7 @@ public class Main extends JPanel implements ActionListener, KeyListener, MouseLi
         panel.width = frame.getWidth();
 
         if (frame.isUndecorated()) brush.mousePosition = MouseInfo.getPointerInfo().getLocation();
-        else brush.mousePosition = new Point(MouseInfo.getPointerInfo().getLocation().x-frame.getX()-8,MouseInfo.getPointerInfo().getLocation().y-frame.getY()-31);
+        else brush.mousePosition = getMousePosition();
 
         camera.x-=(camera.x-camera.actionX)/camera.smoothEffect;
         camera.y-=(camera.y-camera.actionY)/camera.smoothEffect;
@@ -80,6 +80,13 @@ public class Main extends JPanel implements ActionListener, KeyListener, MouseLi
         brush.paintingType = toolBox.getPaintingType();
 
         if (brush.paintAction) layersPanel.getCurrentCanvas().paintPress(brush,camera,frame);
+
+        if (camera.grabCameraMouseBind.isGrabbed()) {
+            Point mousePos = getMousePosition();
+
+            camera.x = camera.grabCameraMouseBind.getAbsX(mousePos.x, camera.actionZoom);
+            camera.y = camera.grabCameraMouseBind.getAbsY(mousePos.y, camera.actionZoom);
+        }
 
         repaint();
 
@@ -110,13 +117,13 @@ public class Main extends JPanel implements ActionListener, KeyListener, MouseLi
         //action brush
         Point mousePosition = getMousePosition();
         int width = (int)(brush.width * camera.actionZoom);
-        if (brush.paintingType == 1) {
-            g.setColor(Color.WHITE);
-        }
-        else {
+        if (brush.paintingType == 1 || brush.paintingType == 0) {
             g.setColor(brush.color);
+            if (brush.paintingType == 1) {
+                g.setColor(Color.WHITE);
+            }
+            g.fillOval(mousePosition.x - width / 2, mousePosition.y - width / 2, width, width);
         }
-        g.fillOval(mousePosition.x - width / 2, mousePosition.y - width / 2, width, width);
         layersPanel.getCurrentCanvas().drawSelectorLine(g,camera,frame);
 
         g.setColor(new Color(120,120,120));
@@ -201,6 +208,10 @@ public class Main extends JPanel implements ActionListener, KeyListener, MouseLi
             }
             brush.paintAction = true;
         }
+        else if (camera.grabCameraMouseBind.check(key)) {
+            camera.grabCameraMouseBind.grab(new Point((int)camera.actionX, (int)camera.actionY), getMousePosition());
+            camera.grabCameraMouseBind.setGrabbed(true);
+        }
     }
 
     @Override
@@ -211,6 +222,13 @@ public class Main extends JPanel implements ActionListener, KeyListener, MouseLi
             brush.paintAction = false;
             layersPanel.getCurrentCanvas().paintRelease(camera,frame,brush);
             //layersPanel.canvas.addFirst(canvas);
+        }
+        else if (camera.grabCameraMouseBind.check(key)) {
+            Point mousePos = getMousePosition();
+
+            camera.grabCameraMouseBind.setGrabbed(false);
+            camera.actionX -= camera.grabCameraMouseBind.getDeltaX(mousePos.x) / camera.actionZoom;
+            camera.actionY -= camera.grabCameraMouseBind.getDeltaY(mousePos.y) / camera.actionZoom;
         }
     }
 
